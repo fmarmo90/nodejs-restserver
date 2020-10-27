@@ -3,6 +3,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const app = express()
+const mongoose = require('mongoose');
+
+const usersRoute = require('./routes/users')
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -14,45 +17,21 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/users', (req, res) => {
-    res.json('get users')
-})
+//Users routes
+app.use(usersRoute)
 
-app.get('/user/:id', (req, res) => {
-    let id = req.params.id
+mongoose.connect('mongodb://localhost:27017', {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    user: 'root',
+    pass: 'example',
+    authSource: 'admin',
+    dbName: 'coffe'
+}, (err, res) => {
+    if (err) throw err
 
-    res.json({
-        id,
-        name: 'Federico'
-    })
-})
-
-app.post('/user', (req, res) => {
-    let body = req.body;
-
-    if (!body.name) {
-        res.status(400).json({
-            error: true,
-            msg: 'The name of the user is required'
-        })
-    } else {
-        res.json({
-            user: req.body
-        })
-    }
-})
-
-app.put('/user/:id', (req, res) => {
-    let id = req.params.id
-
-    res.json({
-        id
-    })
-})
-
-app.delete('/user', (req, res) => {
-    res.json('delete user')
-})
+    console.log('Base de datos online');
+});
 
 app.listen(config.port, () => {
   console.log(`Example app listening at http://localhost:${config.port}`)
