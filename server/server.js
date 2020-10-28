@@ -1,4 +1,4 @@
-const config = require('./config');
+const config = require('./config').config;
 const express = require('express')
 const bodyParser = require('body-parser')
 
@@ -20,14 +20,7 @@ app.get('/', (req, res) => {
 //Users routes
 app.use(usersRoute)
 
-mongoose.connect('mongodb://localhost:27017', {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    user: 'root',
-    pass: 'example',
-    authSource: 'admin',
-    dbName: 'coffe'
-}, (err, res) => {
+mongoose.connect(config.DbUrl, config.DbOptions, (err, res) => {
     if (err) throw err
 
     console.log('Base de datos online');
