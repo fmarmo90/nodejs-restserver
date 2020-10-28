@@ -7,8 +7,9 @@ const _ = require('underscore');
 app.get('/users', (req, res) => {
     let from = req.query.from || 0;
     let limit = req.query.limit || 5;
+    let active = req.query.active || true
 
-    User.find({ active: false }, 'name email img role active')
+    User.find({ active }, 'name email img role active')
         .skip(Number(from))
         .limit(Number(limit))
         .exec((err, users) => {
@@ -18,7 +19,7 @@ app.get('/users', (req, res) => {
                 })
             }
 
-            User.find({ active: true })
+            User.find({ active })
                 .countDocuments((err, count) => {
                     res.json({
                         users,
