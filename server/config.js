@@ -1,10 +1,8 @@
-const config = {
-    port: process.env.PORT || 3000,
-    enviroment: process.env.NODE_ENV || 'dev',
-    DbUrl: (this.enviroment == 'dev') ? 'mongodb://localhost:27017' : 'mongodb+srv://devko:oY7Y9y9ozs4LWew0@cluster0.4479n.mongodb.net/coffe?retryWrites=true&w=majority'
-}
+const config = {}
 
-config.DbUrl = (config.enviroment == 'dev') ? 'mongodb://localhost:27017' : 'mongodb+srv://devko:oY7Y9y9ozs4LWew0@cluster0.4479n.mongodb.net/coffe?retryWrites=true&w=majority'
+config.port =  process.env.PORT || 3000
+config.enviroment = process.env.NODE_ENV || 'dev'
+config.DbUrl = (config.enviroment == 'dev') ? 'mongodb://localhost:27017' : process.env.MONGO_DB_URI
 config.DbOptions = (config.enviroment == 'dev') ?   {
                                                         useNewUrlParser: true, 
                                                         useUnifiedTopology: true,
@@ -18,6 +16,10 @@ config.DbOptions = (config.enviroment == 'dev') ?   {
                                                         useNewUrlParser: true, 
                                                         useUnifiedTopology: true
                                                     }
+
+config.token_expiration_time = 60
+config.token_seed = process.env.SEED || 'this-is-the-seed-development'
+
 module.exports = {
     config
 }
