@@ -5,8 +5,6 @@ const bodyParser = require('body-parser')
 const app = express()
 const mongoose = require('mongoose');
 
-const usersRoute = require('./routes/users')
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
  
@@ -18,7 +16,7 @@ app.get('/', (req, res) => {
 })
 
 //Users routes
-app.use(usersRoute)
+app.use(require('./routes/index'))
 
 mongoose.connect(config.DbUrl, config.DbOptions, (err, res) => {
     if (err) throw err
