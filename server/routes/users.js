@@ -1,13 +1,14 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const bcrypt = require('bcrypt');
-const User = require('../models/user')
+const User = require('../models/user');
+const { verifyToken, verifyAdminRole } = require('../middlewares/auth');
 const _ = require('underscore');
 
-app.get('/users', (req, res) => {
+app.get('/users', verifyToken, (req, res) => {
     let from = req.query.from || 0;
     let limit = req.query.limit || 5;
-    let active = req.query.active || true
+    let active = req.query.active || true;
 
     User.find({ active }, 'name email img role active')
         .skip(Number(from))
@@ -29,7 +30,7 @@ app.get('/users', (req, res) => {
         })
 })
 
-app.get('/user/:id', (req, res) => {
+app.get('/user/:id', verifyToken, (req, res) => {
     let id = req.params.id
 
     res.json({
@@ -38,7 +39,7 @@ app.get('/user/:id', (req, res) => {
     })
 })
 
-app.post('/user', (req, res) => {
+app.post('/user', [verifyToken, verifyAdminRole], (req, res) => {
     let body = req.body;
 
     let user = new User({
@@ -61,7 +62,7 @@ app.post('/user', (req, res) => {
     })
 })
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', verifyToken, (req, res) => {
     let id = req.params.id
     let body = _.pick(req.body, [
         'name',
@@ -89,12 +90,10 @@ app.put('/user/:id', (req, res) => {
     })
 })
 
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     let id = req.params.id
 
-    User.findOneAndUpdate(id, { active: false }, {
-        new: true,
-    }, (err, doc) => {
+    User.findOneAndDelete(id, (err, doc) => {
         if (err) return res.status(400).json(err)
 
         if (!doc) {

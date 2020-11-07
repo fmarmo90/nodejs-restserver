@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="887507084950-k4re4tm23srffkqi1e0l23bo8bks1n6s.apps.googleusercontent.com">
+    <title>Google Sign-in demo</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script> 
+</head>
+<body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <a href="#" onclick="signOut();">Sign out</a>
+    <br><br>
+    <input type="button" onClick="prueba()" value="orteado"/>
+    <script>
+        function getUsers(token) {
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', '/users');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Authorization','Bearer ' + token);
+
+            xhr.onload = function() {
+                console.log(JSON.parse(xhr.responseText));
+            };
+
+            xhr.send()
+        }
+
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            var token = googleUser.getAuthResponse().id_token;
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/google');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('token=' + token);
+
+            xhr.onload = function() {
+                let token = JSON.parse(xhr.responseText).token;
+
+                getUsers(token);
+            };
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+    </script>
+</body>
+</html>

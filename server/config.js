@@ -17,8 +17,9 @@ config.DbOptions = (config.enviroment == 'dev') ?   {
                                                         useUnifiedTopology: true
                                                     }
 
-config.token_expiration_time = 60
+config.token_expiration_time = 60 * 5
 config.token_seed = process.env.SEED || 'this-is-the-seed-development'
+config.google_client_id = process.env.GOOGLE_CLIENT_ID || '887507084950-k4re4tm23srffkqi1e0l23bo8bks1n6s.apps.googleusercontent.com'
 
 module.exports = {
     config

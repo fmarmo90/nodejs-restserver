@@ -20,7 +20,8 @@ let userSchema = new Schema(
         },
         email: {
             type: String,
-            required: [true, 'This field is required']
+            required: [true, 'This field is required'],
+            unique: true
         },
         img: {
             type: String

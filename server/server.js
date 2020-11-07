@@ -1,18 +1,21 @@
 const config = require('./config').config;
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 
-const app = express()
+const app = express();
 const mongoose = require('mongoose');
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
  
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+;
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World!');
 })
 
 //Users routes
